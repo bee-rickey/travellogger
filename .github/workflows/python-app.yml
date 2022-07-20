@@ -4,8 +4,6 @@
 name: Python application
 
 on:
-  push:
-    branches: [ "master" ]
   repository_dispatch:
     branches: [ "my-event" ]
 
@@ -34,7 +32,7 @@ jobs:
     
     - name: Run bot
       run: |
-        python start.py
+        bash ./setup.sh
         
       env:
           LANG: "en_US.UTF-8"

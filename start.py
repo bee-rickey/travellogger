@@ -10,6 +10,8 @@ from time import sleep
 import os
 from time import time
 import json
+import csv
+import datetime
 
 logging.basicConfig(
   format="%(asctime)s %(levelname)-8s %(message)s",
@@ -38,7 +40,7 @@ def main():
 
   bot = telegram.Bot(BOT_TOKEN)
 
-  runtime_logger = {"start_km": 0, "end_km": 0, "start_time": 0, "end_time": 0}
+  runtime_logger = {"from": "", "to": "", "start_km": 0, "end_km": 0, "start_time": 0, "end_time": 0}
   day_logger = {}
 
   while True:
@@ -83,6 +85,20 @@ def entry(bot, update, runtime_logger, day_logger):
       if day_logger[key] == "INPROGRESS":
         day_logger[key] = data
 
+    if update.message.text == "/done":
+      with open("data.csv", "a", encoding="utf-8") as datafile:
+        csvfile = csv.writer(datafile, delimiter=",")
+        csvfile.writerow([
+          day_logger['from'],
+          day_logger['to'],
+          day_logger['start_time'],
+          day_logger['end_time'],
+          day_logger['start_km'],
+          day_logger['end_km'],
+          datetime.date.today().strftime("%d/%m/%Y")
+        ])
+        
+      
     if len(runtime_logger) > 0 or update.message.text == "/start":
       button_list = []
       for key in runtime_logger:
@@ -101,8 +117,10 @@ def entry(bot, update, runtime_logger, day_logger):
     else:
       bot.send_message(
         chat_id=update.message.chat.id,
-        text=f"Entered: {day_logger}. Want to restart? Type /start",
+        text=f"Entered: {day_logger}. Want to restart? Type /start. Else type /done",
       )
+      runtime_logger['from'] = 0
+      runtime_logger['to'] = 0
       runtime_logger['start_km'] = 0
       runtime_logger['end_km'] = 0
       runtime_logger['start_time'] = 0
