@@ -6,11 +6,8 @@ name: Python application
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
-permissions:
-  contents: read
+  repository_dispatch:
+    branches: [ "my-event" ]
 
 jobs:
   build:
@@ -34,6 +31,27 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
+    
+    - name: Run bot
       run: |
-        pytest
+        python start.py
+        
+      env:
+          LANG: "en_US.UTF-8"
+          COVID_BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          UPDATE_ID: ${{ github.event.client_payload.update_id }}
+    
+    - name: Repository Dispatch
+      uses: actions/github-script@v2
+      with:
+        github-token: ${{secrets.MY_TOKEN}}
+        script: |
+          const fs = require('fs');
+          update_id = fs.readFileSync('/tmp/update_id', 'utf8');
+          console.log("This is the last update_id: "+update_id);
+          await github.repos.createDispatchEvent({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  event_type: "my-event",
+                  client_payload: { greeting: "hello", update_id: update_id }
+                });
