@@ -3,6 +3,8 @@
 set -eu
 
 repo_uri="https://x-access-token:${MY_TOKEN}@github.com/travellogger.git"
+
+echo "$repo_url"
 remote_name="origin"
 main_branch="master"
 gh_pages_branch="gh-pages"
