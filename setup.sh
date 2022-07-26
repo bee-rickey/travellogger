@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -eu
-
+env
 repo_uri="https://x-access-token:${MY_TOKEN}@github.com/travellogger.git"
 
 echo "$repo_url"
