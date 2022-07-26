@@ -38,6 +38,7 @@ jobs:
           LANG: "en_US.UTF-8"
           COVID_BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           UPDATE_ID: ${{ github.event.client_payload.update_id }}
+          MY_TOKEN: ${{ secrets.github_token }}
     
     - name: Repository Dispatch
       uses: actions/github-script@v2
