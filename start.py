@@ -40,15 +40,14 @@ def main():
 
   bot = telegram.Bot(BOT_TOKEN)
 
-  runtime_logger = {"By": "", "Category": "", "Amount": 0, "Date": 0}
-  day_logger = {}
+  data = []
 
   while True:
     try:
       for update in bot.get_updates(offset=update_id, timeout=10):
         update_id = update.update_id + 1
         logging.info(f"Update ID:{update_id}")
-        entry(bot, update, runtime_logger, day_logger)
+        entry(bot, update, data)
     except NetworkError:
       sleep(1)
     except Unauthorized:
@@ -61,40 +60,30 @@ def main():
       break
 
 
-def entry(bot, update, runtime_logger, day_logger):
-
-  if update.message:
-    data = update.message.text.splitlines()
-    logging.info(f"Update ID:{data}")
-
+def entry(bot, update, data):
+  if update.message:    
     if update.message.text == "/done":
       with open("data.csv", "a", encoding="utf-8") as datafile:
         csvfile = csv.writer(datafile, delimiter=",")
-        csvfile.writerow([
-          data,
-          datetime.date.today().strftime("%d/%m/%Y")
-        ])
+        for item in data:
+          csvfile.writerow([
+            item
+          ])
         
     if update.message.text == "/add":
-
-      reply_markup = "Add in the following format: 'Spender, Amount, Category, Date'. Type /done once done"#InlineKeyboardMarkup(build_menu(button_list, n_cols=4))
-
       bot.send_message(
         chat_id=update.message.chat.id,
-        text="Add in the following format: 'Spender, Amount, Category, Date'",
+        text="Add in the following format: 'Spender, Amount, Category, Date. Type /done once done'",
         reply_to_message_id=update.message.message_id
       )
+      
     else:
-      expenses = ""
+      data += update.message.text.splitlines()
+      logging.info(f"Update ID:{data}")
       bot.send_message(
         chat_id=update.message.chat.id,
-        text=f"Entered: {expenses}. Want to restart? Type /add. Else type /done",
+        text=f"You Entered: {data}. Want to restart? Type /add. Else type /done",
       )
-      runtime_logger['By'] = 0
-      runtime_logger['Category'] = 0
-      runtime_logger['Amount'] = 0
-      runtime_logger['Date'] = ''
-      day_logger = {}
 
 def camelize(label):
   words = label.split("_")
