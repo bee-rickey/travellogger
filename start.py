@@ -40,7 +40,7 @@ def main():
 
   bot = telegram.Bot(BOT_TOKEN)
 
-  runtime_logger = {"from": "", "to": "", "start_km": 0, "end_km": 0, "start_time": 0, "end_time": 0}
+  runtime_logger = {"By": "", "Category": "", "Amount": 0, "Date": 0}
   day_logger = {}
 
   while True:
@@ -89,17 +89,15 @@ def entry(bot, update, runtime_logger, day_logger):
       with open("data.csv", "a", encoding="utf-8") as datafile:
         csvfile = csv.writer(datafile, delimiter=",")
         csvfile.writerow([
-          day_logger['from'],
-          day_logger['to'],
-          day_logger['start_time'],
-          day_logger['end_time'],
-          day_logger['start_km'],
-          day_logger['end_km'],
+          day_logger['By'],
+          day_logger['Category'],
+          day_logger['Amount'],
+          day_logger['Date'],
           datetime.date.today().strftime("%d/%m/%Y")
         ])
         
       
-    if len(runtime_logger) > 0 or update.message.text == "/start":
+    if len(runtime_logger) > 0 or update.message.text == "/add":
       button_list = []
       for key in runtime_logger:
         button_list.append(
@@ -117,14 +115,12 @@ def entry(bot, update, runtime_logger, day_logger):
     else:
       bot.send_message(
         chat_id=update.message.chat.id,
-        text=f"Entered: {day_logger}. Want to restart? Type /start. Else type /done",
+        text=f"Entered: {day_logger}. Want to restart? Type /add. Else type /done",
       )
-      runtime_logger['from'] = 0
-      runtime_logger['to'] = 0
-      runtime_logger['start_km'] = 0
-      runtime_logger['end_km'] = 0
-      runtime_logger['start_time'] = 0
-      runtime_logger['end_time'] = 0
+      runtime_logger['By'] = 0
+      runtime_logger['Category'] = 0
+      runtime_logger['Amount'] = 0
+      runtime_logger['Date'] = ''
       day_logger = {}
 
 def camelize(label):
