@@ -93,7 +93,7 @@ def entry(bot, update, data):
       )
 
 
-  return menu
+  return 
 
 if __name__ == "__main__":
   main() 
