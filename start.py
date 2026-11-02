@@ -72,14 +72,14 @@ def entry(bot, update, data):
       message = "\n".join(data)  
       bot.send_message(
         chat_id=update.message.chat.id,
-        text=f"Added  the following into log file \n {message}",
+        text=f"Added  the following into log file \n\n {message}",
       )
       return 
         
     if update.message.text == "/add":
       bot.send_message(
         chat_id=update.message.chat.id,
-        text="Add in the following format: 'Spender, Amount, Category, Date. Type /done once done'",
+        text="Add in the following format: 'Spender, Amount, Category, Date. Use /done once done'",
         reply_to_message_id=update.message.message_id
       )
       
@@ -89,22 +89,9 @@ def entry(bot, update, data):
       logging.info(f"Update ID:{data}")
       bot.send_message(
         chat_id=update.message.chat.id,
-        text=f"You Entered: \n {message}. \n Want to add more? Type /add. Else type /done",
+        text=f"You Entered: \n{message} \n\nUse /add to add more. Else use /done",
       )
 
-def camelize(label):
-  words = label.split("_")
-  name = ""
-  for word in words:
-    name = name + " " + word[0].upper() + word[1:].lower()
-  return name
-      
-def build_menu(buttons, n_cols, header_buttons=None, footer_buttons=None):
-  menu = [buttons[i : i + n_cols] for i in range(0, len(buttons), n_cols)]
-  if header_buttons:
-    menu.insert(0, [header_buttons])
-  if footer_buttons:
-    menu.append([footer_buttons])
 
   return menu
 
