@@ -69,6 +69,11 @@ def entry(bot, update, data):
           csvfile.writerow([
             item
           ])
+      message = "\n".join(data)  
+      bot.send_message(
+        chat_id=update.message.chat.id,
+        text=f"Added  the following into log file \n {message}",
+      )
         
     if update.message.text == "/add":
       bot.send_message(
@@ -79,10 +84,11 @@ def entry(bot, update, data):
       
     else:
       data += update.message.text.splitlines()
+      message = "\n".join(data)
       logging.info(f"Update ID:{data}")
       bot.send_message(
         chat_id=update.message.chat.id,
-        text=f"You Entered: {data}. Want to restart? Type /add. Else type /done",
+        text=f"You Entered: {message}. Want to add more? Type /add. Else type /done",
       )
 
 def camelize(label):
