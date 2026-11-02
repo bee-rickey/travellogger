@@ -67,7 +67,7 @@ def entry(bot, update, data):
         csvfile = csv.writer(datafile, delimiter=",")
         for item in data:
           csvfile.writerow([
-            item
+            item.strip()
           ])
       message = "\n".join(data)  
       bot.send_message(
