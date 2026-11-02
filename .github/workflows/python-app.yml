@@ -49,11 +49,18 @@ jobs:
         github-token: ${{ secrets.MY_TOKEN }}
         script: |
           const fs = require('fs');
-          update_id = fs.readFileSync('/tmp/update_id', 'utf8');
-          console.log("This is the last update_id: "+update_id);
+          const update_id = fs.readFileSync('/tmp/update_id', 'utf8').trim();
+          console.log("This is the last update_id: " + update_id);
+          
+          // Safety Check: Don't dispatch if the bot didn't find a new ID
+          if (!update_id || update_id === "0" || update_id === "${{ github.event.client_payload.update_id }}") {
+            console.log("No new updates found. Stopping loop.");
+            return;
+          }
+
           await github.rest.repos.createDispatchEvent({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  event_type: "my-event",
-                  client_payload: { greeting: "hello", update_id: update_id }
-                });
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            event_type: "my-event",
+            client_payload: { greeting: "hello", update_id: update_id }
+          });
