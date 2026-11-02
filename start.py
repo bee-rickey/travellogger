@@ -63,7 +63,7 @@ def main():
 
 def entry(bot, update, runtime_logger, day_logger):
 
-  if update.callback_query:
+  """if update.callback_query:
 
     data = update.callback_query.data 
     day_logger[data] = "INPROGRESS"
@@ -72,19 +72,19 @@ def entry(bot, update, runtime_logger, day_logger):
     bot.send_message(
       reply_to_message_id=update.callback_query.message.reply_to_message.message_id,
       chat_id = update.callback_query.message.chat.id,
-      text=f"Enter {camelize(data)}",
-      reply_markup=force
+      text=f"Enter {camelize(data)}"
+      #reply_markup=force
     )
 
     del runtime_logger[data]
-      
+  """
   if update.message:
     data = update.message.text
-
-    for key in day_logger:
+    logging.info(f"Update ID:{data}")
+    """for key in day_logger:
       if day_logger[key] == "INPROGRESS":
         day_logger[key] = data
-
+    """
     if update.message.text == "/done":
       with open("data.csv", "a", encoding="utf-8") as datafile:
         csvfile = csv.writer(datafile, delimiter=",")
@@ -97,25 +97,24 @@ def entry(bot, update, runtime_logger, day_logger):
         ])
         
       
-    if len(runtime_logger) > 0 or update.message.text == "/add":
-      button_list = []
+    if update.message.text == "/add":
+      """button_list = []
       for key in runtime_logger:
         button_list.append(
           InlineKeyboardButton(camelize(key), callback_data=key)
         )
-
-      reply_markup = InlineKeyboardMarkup(build_menu(button_list, n_cols=4))
+      """
+      reply_markup = "Add in the following format: 'Spender, Amount, Category, Date'. Type /done once done"#InlineKeyboardMarkup(build_menu(button_list, n_cols=4))
 
       bot.send_message(
         chat_id=update.message.chat.id,
-        text="Select an option",
-        reply_to_message_id=update.message.message_id,
-        reply_markup=reply_markup,
+        text="Add in the following format: 'Spender, Amount, Category, Date'",
+        reply_to_message_id=update.message.message_id
       )
     else:
       bot.send_message(
         chat_id=update.message.chat.id,
-        text=f"Entered: {day_logger}. Want to restart? Type /add. Else type /done",
+        text=f"Entered: {expenses}. Want to restart? Type /add. Else type /done",
       )
       runtime_logger['By'] = 0
       runtime_logger['Category'] = 0
