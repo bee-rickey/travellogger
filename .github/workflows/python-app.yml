@@ -41,7 +41,7 @@ jobs:
           LANG: "en_US.UTF-8"
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           UPDATE_ID: ${{ github.event.client_payload.update_id }}
-          MY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MY_TOKEN: ${{ secrets.MY_TOKEN }}
     
     - name: Repository Dispatch
       uses: actions/github-script@v7
