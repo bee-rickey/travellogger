@@ -8,7 +8,7 @@ on:
     branches:
       - master
   repository_dispatch:
-    branches: [ "my-event" ]
+    types: [ "my-event" ]
 
 jobs:
   build:
@@ -44,9 +44,9 @@ jobs:
           MY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Repository Dispatch
-      uses: actions/github-script@v2
+      uses: actions/github-script@v7
       with:
-        github-token: ${{secrets.MY_TOKEN}}
+        github-token: ${{ secrets.MY_TOKEN }}
         script: |
           const fs = require('fs');
           update_id = fs.readFileSync('/tmp/update_id', 'utf8');
