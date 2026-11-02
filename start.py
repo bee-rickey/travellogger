@@ -112,6 +112,7 @@ def entry(bot, update, runtime_logger, day_logger):
         reply_to_message_id=update.message.message_id
       )
     else:
+      expenses = ""
       bot.send_message(
         chat_id=update.message.chat.id,
         text=f"Entered: {expenses}. Want to restart? Type /add. Else type /done",
