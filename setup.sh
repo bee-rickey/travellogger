@@ -3,6 +3,7 @@
 set -eu
 env
 repo_uri="https://x-access-token:${MY_TOKEN}@github.com/travellogger.git"
+repo_uri="https://bee-rickey:${MY_TOKEN}@github.com/bee-rickey/travellogger.git"
 
 echo "$repo_uri"
 remote_name="origin"
