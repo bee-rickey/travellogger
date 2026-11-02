@@ -74,6 +74,7 @@ def entry(bot, update, data):
         chat_id=update.message.chat.id,
         text=f"Added  the following into log file \n {message}",
       )
+      return 
         
     if update.message.text == "/add":
       bot.send_message(
@@ -88,7 +89,7 @@ def entry(bot, update, data):
       logging.info(f"Update ID:{data}")
       bot.send_message(
         chat_id=update.message.chat.id,
-        text=f"You Entered: {message}. Want to add more? Type /add. Else type /done",
+        text=f"You Entered: \n {message}. \n Want to add more? Type /add. Else type /done",
       )
 
 def camelize(label):
