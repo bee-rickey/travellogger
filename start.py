@@ -63,47 +63,20 @@ def main():
 
 def entry(bot, update, runtime_logger, day_logger):
 
-  """if update.callback_query:
-
-    data = update.callback_query.data 
-    day_logger[data] = "INPROGRESS"
-    force = ForceReply(input_field_placeholder=f"Enter {camelize(data)}")
- 
-    bot.send_message(
-      reply_to_message_id=update.callback_query.message.reply_to_message.message_id,
-      chat_id = update.callback_query.message.chat.id,
-      text=f"Enter {camelize(data)}"
-      #reply_markup=force
-    )
-
-    del runtime_logger[data]
-  """
   if update.message:
-    data = update.message.text
+    data = update.message.text.splitlines()
     logging.info(f"Update ID:{data}")
-    """for key in day_logger:
-      if day_logger[key] == "INPROGRESS":
-        day_logger[key] = data
-    """
+
     if update.message.text == "/done":
       with open("data.csv", "a", encoding="utf-8") as datafile:
         csvfile = csv.writer(datafile, delimiter=",")
         csvfile.writerow([
-          day_logger['By'],
-          day_logger['Category'],
-          day_logger['Amount'],
-          day_logger['Date'],
+          data,
           datetime.date.today().strftime("%d/%m/%Y")
         ])
         
-      
     if update.message.text == "/add":
-      """button_list = []
-      for key in runtime_logger:
-        button_list.append(
-          InlineKeyboardButton(camelize(key), callback_data=key)
-        )
-      """
+
       reply_markup = "Add in the following format: 'Spender, Amount, Category, Date'. Type /done once done"#InlineKeyboardMarkup(build_menu(button_list, n_cols=4))
 
       bot.send_message(
